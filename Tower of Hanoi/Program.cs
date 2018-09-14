@@ -6,28 +6,33 @@ using System.Threading.Tasks;
 
 namespace Tower_of_Hanoi
 {
-    class Program
+    public class Program
     {
-        const int GameRingCount = 5;
         static void Main(string[] args)
         {
+            Console.Write("Define ring count: ");
+            int gameRingCount = Convert.ToInt32(Console.ReadLine());
+
             List<Tower> towers = new List<Tower>(3)
             {
-                new StackedTower(GameRingCount),
+                new StackedTower(gameRingCount),
                 new EmptyTower(),
                 new EmptyTower()
             };
 
             Solve(towers);
+
+            Console.ReadKey();
         }
 
         // Assumes that there are 3 towers
-        static void Solve(List<Tower> towers)
+        public static void Solve(List<Tower> towers)
         {
             var stackedTower = towers.OfType<StackedTower>().First();
             int direction = stackedTower.RingCount % 2 == 0 ? 1 : -1;
+            int gameRingCount = stackedTower.RingCount;
 
-            while (towers.Last().RingCount != GameRingCount)
+            while (towers.Last().RingCount != gameRingCount)
             {
                 int ringMovedTowerIndex = -1;
                 for (int towerIndex = 0; towerIndex < towers.Count; towerIndex++)
@@ -45,6 +50,9 @@ namespace Tower_of_Hanoi
                             if (!towers[ringReceivingTowerIndex].HasRings ||
                                 towers[ringReceivingTowerIndex].PeekTopRing > towers[ringLosingTowerIndex].PeekTopRing)
                             {
+                                Console.WriteLine("Ring of size " + towers[ringLosingTowerIndex].PeekTopRing +
+                                    " from tower " + ringLosingTowerIndex +
+                                    " was moved to tower " + ringReceivingTowerIndex);
                                 towers[ringLosingTowerIndex].MoveRingOnto(towers[ringReceivingTowerIndex]);
                                 ringMovedTowerIndex = ringReceivingTowerIndex;
                                 ringMoved = true;
@@ -54,7 +62,7 @@ namespace Tower_of_Hanoi
                     if (ringMoved) { towerIndex = -1; } // Look at towers from start
                 }
 
-                if (towers.Last().RingCount != GameRingCount)
+                if (towers.Last().RingCount != gameRingCount)
                     throw new Exception("No more moves available");
             }
         }
