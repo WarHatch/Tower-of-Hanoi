@@ -24,8 +24,10 @@ namespace Tower_of_Hanoi.Tests
                     new EmptyTower()
                 };
 
-                Program.Solve(towers);
+                Program.Solve(towers, "solve-towers-with-" + gameRingCount + "rings");
 
+                Assert.IsTrue(towers[0].RingCount == 0);
+                Assert.IsTrue(towers[1].RingCount == 0);
                 Assert.IsTrue(towers.Last().RingCount == gameRingCount);
             }
         }
